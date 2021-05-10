@@ -1,0 +1,47 @@
+<launch>
+
+    <arg name="UAV_NAME" default="$(env UAV_NAME)"/>
+    <arg name="UAV_TYPE" default="$(env UAV_TYPE)"/>
+    <arg name="RUN_TYPE" default="$(env RUN_TYPE)"/>
+  
+    <arg name="debug" default="false"/>
+  
+    <arg     if="$(arg debug)" name="launch_prefix" value="debug_roslaunch" />
+    <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  
+    <arg name="config_file" default=""/>
+
+    <arg name="image_width" default="1280"/>
+    <arg name="image_height" default="720"/>
+    <arg name="view_angle" default="170"/>
+
+    <!-- Note: the object to track should exist on names file file -->
+    <arg name="object_to_track" default="person"/>
+    <arg name="names_file" default="$(find yolo_tracker)/models/coco.names"/>
+    <arg name="model_config_file" default="$(find yolo_tracker)/models/yolov4-tiny.cfg"/>
+    <arg name="model_weights_file" default="$(find yolo_tracker)/models/yolov4-tiny.weights"/>
+    <arg name="desired_distance_to_object" default="10" />
+    <arg name="model_in_w" default="320"/>
+    <arg name="model_in_h" default="320"/>
+ 
+
+    <group ns="$(arg UAV_NAME)">
+
+        <node name="tracker" pkg="yolo_tracker" type="tracker" output="screen" respawn="false">
+    
+          <param name="uav_name" value="$(arg UAV_NAME)" />
+          <param name="run_type" value="$(arg RUN_TYPE)" />
+          <param name="view_angle" value="$(arg view_angle)"/>
+          <param name="object_to_track" value="$(arg object_to_track)"/>
+
+          <param name="names_file" value="$(arg names_file)"/>
+          <param name="model_config_file" value="$(arg model_config_file)"/>
+          <param name="model_weights_file" value="$(arg model_weights_file)"/>
+          <param name="desired_distance_to_object" value="$(arg desired_distance_to_object)"/>
+          <param name="model_in_w" value="$(arg model_in_w)"/>
+          <param name="model_in_h" value="$(arg model_in_h)"/>
+
+        </node>
+    
+      </group>
+  </launch>
